@@ -26,17 +26,16 @@ paramsDI = '-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pas
 paramsNoDI = '-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 0 --dtMax_hr 2.0 --nSide 1024 --useJ2000 --rndSmear'
 param_arr = [paramsDI, paramsDI, paramsDI, paramsNoDI]
 
-for x in range (chunkStart,chunkEnd):
-    for i in range(4):
-    #path = "`envsubst < /lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/pass5_allbin/chunk%06d.txt`"%(x) #Bins 0-1, DI
-    #path = "`envsubst < /lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/pass5_bin2up/chunk%06d.txt`"%(x) #Bins 2-5, DI
-    path = "`envsubst < /lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/pass5_bin6up/chunk%06d.txt`"%(x) #Bins 6-10, DI and noDi
-    
-    #if os.path.isdir(path):
-        #for y in range (1, 4): 
-    outfile = open("ch%04d-DI-6up.sh"%(x,), "w") #CHANGE W CUT FILE
-    i=i+1
-    print >> outfile,"""#!/bin/sh
+path01  = "`envsubst < /lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/pass5_allbin/chunk%06d.txt`"%(x) #Bins 0-1, DI
+path25  = "`envsubst < /lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/pass5_bin2up/chunk%06d.txt`"%(x) #Bins 2-5, DI
+path610 = "`envsubst < /lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/pass5_bin6up/chunk%06d.txt`"%(x) #Bins 6-10, DI and noDI
+path_arr = [path01, path25, path610, path610]    
+
+for x in range (chunkStart,chunkEnd): # iterate over chunks
+    for i in range(4):# iterate over bin groups
+        file_name = "ch%04d-%s.sh"%(x,groupNames[i]
+        outfile = open(file_name, "w") #CHANGE W CUT FILE
+        print("""#!/bin/sh
 #SBATCH --time=30:00:00 --mem-per-cpu=8000mb
 #
 # INDIR:
@@ -45,9 +44,9 @@ for x in range (chunkStart,chunkEnd):
 # RUN:
 # __RUN__
 
-"""
-    print >>outfile, "%s"%(aerie)
-    print >>outfile, "which offline-reconstructor" 
-    print >>outfile, "aerie-apps-make-hawc-maps --input %s -p %s -n ch%04d --cutFile %s %s"%(path,outputDir,x,cuts,paramsNoDI)
-    outfile.close()
+""",file=outfile)
+        print("%s"%(aerie),file=outfile)
+        print("which offline-reconstructor" ,file=outfile)
+        print("aerie-apps-make-hawc-maps --input %s -p %s -n ch%04d --cutFile %s %s"%(path_arr[i],outputDir,x,cuts_arr[i],param_arr[i]),file=outfile)
+        outfile.close()
 
