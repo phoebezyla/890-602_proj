@@ -1,4 +1,4 @@
-These are the scripts and fhit cut files to make fhit maps (including background estimation). The scripts assume that the chunks are already made, and the $CONFIG_HAWC is correctly set. 
+These are the scripts and fhit cut files to make fhit maps (including background estimation). The scripts assume that the chunks are already made, and the `$CONFIG_HAWC` parameter is correctly set. 
 Much of this repository has been modified from Kelly Malone's ground parameter map-making repository (https://gitlab.com/hawc-observatory/analysis-scripts/map-making/-/tree/master/counts-maps/GP-scripts?ref_type=heads).
 
 # SCRIPT DESCRIPTIONS 
@@ -68,7 +68,7 @@ In the cuts folder in this repository, all individual cut files and the master c
    - Output is one .root file per chunk per bin
   
 9. Combine .root files from (9) with `hadd`
-   - For bin X, do `hadd binX.root distsXroot
+   - For bin X, do `hadd binX.root distsXroot`
    - Output is one .root file per bin
 
 10. Modify and run `make-randomized-bkg.py`
