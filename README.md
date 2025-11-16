@@ -17,9 +17,69 @@ Note: Chunks to iterate over needs to be the same as those used in `make-sub-scr
 Creates job submission scripts to randomize the background for the bins with low statistics. Specify aerie location, location of histograms from `make-histograms.py`, location of combined files from `combine-raw-files.py`, list of bins to iterate over, parameter/zenith alignment file, and output directory.
 
 # MAKING MAPS 
-Direct Integration: B1C0-B7C0, B1C1-B6C1
-	_allbins  B0C0 B0C1 B1C0 B1C1
-	_2-10     B2-B5
-	_bin6plus B6-B10
-No Direct Integration: B8C0-B10C0, B7C1-B10C1
-	_bin6plus B6-B10
+For the fHit energy estimator, there are four groups of energy bins, each of which requires a unique combonation of input .txt files, cut file, parameter/zenith alignment file, and background estimation scheme. Listed below is each group of bins, and their required inputs. 
+
+- B0C0 B0C1 B1C0 B1C1
+  - `.../pass5_allbin/chunk%d.txt` The .xcd files must come from an `allbin` directory
+  - `.../fNhit_100pct_pgamma_mlp_cut_0-1.txt`
+  - `'-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 1.2 --dtMax_hr 2.0 --nSide 1024 --roi --useJ2000 --rndSmear'` This is the current (as of 11/2025) zenith alignment file
+  - Background Est. = Direct Integration (DI)
+
+ - B2C0 B2C1 B3C0 B3C1 B4C0 B4C1 B5C0 B5C1
+   - `../pass5_bin2up/chunk%d.txt` The .xcd files must come from a `bin2up` directory
+   - `.../fNhit_100pct_pgamma_mlp_cut_2-5.txt`
+   - `'-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 1.2 --dtMax_hr 2.0 --nSide 1024 --roi --useJ2000 --rndSmear'` This is the current (as of 11/2025) zenith alignment file
+   - Background Est. = Direct Integration (DI)
+  
+- B6C0 B6C1 B7C0
+  - `.../pass5_bin6up/chunk%06d.txt` The .xcd files must come from a `bin6up` directory.
+  - `.../fNhit_100pct_pgamma_mlp_cut_6-7.txt`
+  -  `'-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 1.2 --dtMax_hr 2.0 --nSide 1024 --roi --useJ2000 --rndSmear'` This is the current (as of 11/2025) zenith alignment file
+  -  Background Est. = Direct Integration (DI)
+ 
+- B7C1 B8C0 B8C1 B9C0 B9C1 B10C0 B10C1
+  - `.../pass5_bin6up/chunk%06d.txt` The .xcd files must come from a `bin6up` directory.
+  - `.../fNhit_100pct_pgamma_mlp_cut_7up_noDI.txt`
+  - `'-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 0 --dtMax_hr 2.0 --nSide 1024 --useJ2000 --rndSmear'` This is the current (as of 11/2025) zenith alignment file for no DI. Not that `dtMin` here is 0 -- only those bins with DI have `dtMin = 1.2`. Also, the `--roi` flag is not used for this bin group.
+  - Background Est. = Randomized Background
+
+In the cuts folder in this repository, all individual cut files and the master cut file are stored. 
+
+1. Modify and run `make-sub-scripts.py`. 
+   - The script must be run four times, once with the inputs changed for each of the bin groups.
+   - Be sure to change the name for the output job submission script
+   - The output will be four job submission .sh files per chunk, one for each bin group.
+   
+2. Submit job scripts from step 1.
+   - Output is one .fits.gz file per chunk per bin
+
+4. Modify and run `combine-raw-files.py`
+   - The script only needs to be run once.
+   - The output will be one job submission script per bin
+  
+5. Submit job scripts from step 3.
+   - Output is one .fits.gz file per bin
+
+7. Modify and run `make-histograms.py`
+   -  The script needs to be run once, with the input directory being the directory for the randomize background bin group. Histograms only need to be made for the group w/ energy estimator = randomize background. 
+   -  The output will be one job submission script per chunk
+  
+8. Submit job scripts from step 5.
+   - Output is one .root file per chunk per bin
+  
+9. Combine .root files from (9) with `hadd`
+   - For bin X, do `hadd binX.root distsXroot
+   - Output is one .root file per bin
+
+10. Modify and run `make-randomized-bkg.py`
+    - Output is one job submission script per bin
+
+11. Submit job scripts from step 10.
+    - Output is one -randomized.fits.gz file per bin
+
+12. Replace combined files for randomized background bins with the files from (11).
+
+13. Rejigger all files by an additional 0.5 degrees
+    - `aerie-apps-recalculate-bkg -i inputfile.fits.gz -o outputfile.fits.gz --smooth 0.5 --nthreads 10`
+    - Input files are .fits.gz files from step 5 for all DI bin groups and from step 12 for all randBkg bin groups
+    - Output is rejiggered .fits.gz files 
