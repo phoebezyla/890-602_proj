@@ -82,4 +82,6 @@ In the cuts folder in this repository, all individual cut files and the master c
 13. Rejigger all files by an additional 0.5 degrees
     - `aerie-apps-recalculate-bkg -i inputfile.fits.gz -o outputfile.fits.gz --smooth 0.5 --nthreads 10`
     - Input files are .fits.gz files from step 5 for all DI bin groups and from step 12 for all randBkg bin groups
-    - Output is rejiggered .fits.gz files 
+    - Output is rejiggered .fits.gz files
+
+  Last Edited: Nov 2025 P. Zyla
