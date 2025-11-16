@@ -1,0 +1,3 @@
+B6C0     "(rec.coreFiduScale<=100)&&(rec.nHit>0.351001*rec.nChAvail)&&(rec.nHit<=0.472001*rec.nChAvail)&&(rec.nChTot>800)&&(rec.nChAvail>0.900001*rec.nChTot) && (rec.angleFitStatus==0)&&(rec.coreFitStatus==0)&&(rec.pgamma>0.989184)"
+B7C0     "(rec.coreFiduScale<=100)&&(rec.nHit>0.472001*rec.nChAvail)&&(rec.nHit<=0.599001*rec.nChAvail)&&(rec.nChTot>800)&&(rec.nChAvail>0.900001*rec.nChTot) && (rec.angleFitStatus==0)&&(rec.coreFitStatus==0)&&(rec.zenithAngle<1.047)&&(rec.pgamma>0.992382)"
+B6C1     "(rec.coreFiduScale>100)&&(rec.coreFiduScale<=150)&&(rec.nHit>0.351001*rec.nChAvail)&&(rec.nHit<=0.472001*rec.nChAvail)&&(rec.nChTot>800)&&(rec.nChAvail>0.900001*rec.nChTot) && (rec.angleFitStatus==0)&&(rec.coreFitStatus==0)&&(rec.pgamma>0.99164)"

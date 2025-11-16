@@ -1,0 +1,6 @@
+Direct Integration: B1C0-B7C0, B1C1-B6C1
+	_allbins  B0C0 B0C1 B1C0 B1C1
+	_2-10     B2-B5
+	_bin6plus B6-B10
+No Direct Integration: B8C0-B10C0, B7C1-B10C1
+	_bin6plus B6-B10
