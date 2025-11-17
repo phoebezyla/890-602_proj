@@ -1,32 +1,26 @@
-import glob
-import os
-import sys
-from math import ceil
+'''
+A script to create job submission scripts for `aerie-apps-make-local-dists`
 
-homeDir="/data/disk01/home/zylaphoe/maps-making-ML"
-anaDir="/lustre/hawcz01/scratch/userspace/zylaphoe/maps"
+Takes input .txt files (which list .xcd files for each chunk) and creates one .root file for each bin for each chunk. Other input is a cut file. First part of creating randomized backgound for low-statistic energy bins. 
+'''
 
-dezhiDir="/lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/"
+#!/bin/bash/ --login
+#SBATCH --mem=2000gb
+#SBATCH --time=10:00:00
 
-#3 input/output directories: first is all bins, second is bins 2up, third is bin 6 up
-inputDir="/lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/pass5_bin6up"  #only randomized bkg are B7C1-> and B8C0->
+chunkStart = 1
+chunkEnd = 1511 # end chunk + 1
 
-outputDir="/lustre/hawcz01/scratch/userspace/zylaphoe/maps/hists"
+aerie = "source /data/disk01/home/zylaphoe/hawc_software/init_aerie.sh"
 
-cutsFile = "/data/disk01/home/zylaphoe/maps-making-ML/fNhit_100pct_pgamma_mlp_cut_7up_noDI.txt"
+cut = "/data/disk01/home/zylaphoe/map-making-ML/fNhit_100pct_pgamma_mlp_cut_7up_noDI.txt" #only need to make histograms for noDI bins
+outDir = "/lustre/hawcz01/scratch/userspace/zylaphoe/maps/hists/"
 
-i=1
-for x in range (1,1511):
+for x in range(chunkStart,chunkEnd):
+  inFile = "`envsubst < /lustre/hawcz01/scratch/userspace/dezhih/service/nn_estimator/nn_sky_map/chunk_map/pass5-chunk-1000-1090-ML/pass5_bin6up/chunk00%04d.txt`"%(x)
+  
   outfile = open("hist-%04d.sh"%(x), "w")
-  i=i+1
-  print >> outfile,"""#!/bin/sh
-#SBATCH --time=30:00:00 --mem-per-cpu=8000mb
-#
-# INDIR:
-# __INDIR__
-# 
-# RUN:
-# __RUN__
-"""
-  print >>outfile, "aerie-apps-make-local-dists --input `envsubst < %s/chunk%06d.txt` --cuts %s -o chunk%04d-bin%%s.root"%(inputDir,x,cutsFile,x)
+  outfile.write("#!/bin/sh\n#SBATCH --time=30:00:00 --mem-per-cpu=8000mb\n#")
+  outfile.write("\n%s"%(aerie))
+  outfile.write("\naerie-apps-make-local-dists  --cuts %s --input %s -o %schunk%04d-bin%%s.root"%(cut,inFile,outDir,x))
   outfile.close()
