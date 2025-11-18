@@ -1,0 +1,112 @@
+function submit_slurm_binning_scripts(files.sh, working directory) is:
+
+    for file_i.sh in working directory do:
+        sbatch file_i.sh 
+
+
+function make_sub_scripts(.xcd files, parameter file, cut file, aerie path, output directory) is 
+    
+    for i, file in .xcd files do:
+        set paramsDI = parameter file
+        open outfile named file_i.sh
+        print to outfile bash prelude
+        print to outfile "source aerie path"
+        print to outfile "aerie-apps-make-hawc-maps --input .xcd file_i -p output directory -n file --cutFile cut file parameter file")
+        close outfile 
+
+    call function submit_slurm_binning_scripts
+    do submit_slurm_binning_scripts(file_i.sh) for all file_i.sh
+    
+    return .fits.gz files
+
+
+function combine-files(.fits.gz files, bins, input dir, output dir) is:
+
+    for bin in bin do: 
+        open outfile named "combine-bin.sh"
+        print to outfile bash prelude
+        print to outfile "aerie-apps-combine-maps --inputs input dir/*bin* --outputs output dir/bin.fits.gz"
+        close outfile 
+
+    call function submit_slurm_binning_scripts
+    do submit_slurm_binning_scripts(combine-bin.sh) for all combine-bin.sh
+
+    return binned.fits.gz files
+
+function make-histograms(.xcd files, parameter file, cut file, aerie path, output directory) is
+
+    for file in .xcd file, i in range(.xcd file) do:
+        open outfile named hist-i.sh
+        print to outfile bash prelude
+        print to outfile "source aerie path"
+        print to outfile "cd output directory"
+        print to outfile "aerie-apps-make-local-dists --cuts cut file --input file -o chunk_i-bin%%s.root"
+        close outfile 
+
+    call function submit_slurm_binning_scripts
+    do submit_slurm_binning_scripts(hist-i.sh) for all hist-i.sh
+
+    return .root files
+
+function combine_histograms(.root files, bin numbers) is:
+
+    for i in bin numbers do:
+        hadd bin_i.root dists*.root #bin_i.root comes from lsit of .root files
+    
+    return combo_bin.root files
+
+function make_randomized_bkg(.root files, zenith alignment file, hist location, combined location, output dir, aerie path, bins) is:
+
+    for i in bins do:
+        open outfile named randomize_i.sh
+        print to outfile bash prelude
+        print to outfile source aerie path
+        print to outfile aerie-apps-randomize-bkg -o output dir/bin_i-randomized.fits.gz -i hist location --zenith-alignment-file zenith alignment file --inputData combined location/bin_i.fits.gz
+        close outfile 
+    
+    call function submit_slurm_binning_scripts
+    do submit_slurm_binning_scripts(randomize_i.sh) for all randomize_i.sh
+
+    return binned.fits.gz files 
+
+function rejigger(binned.fits.gz files, output path) is:
+
+    for file in binned.fits.gz files do:
+        aerie-apps-recalculate-bkg -i file -o output path/file-rejiggered.fits.gz --smooth 0.5 --nthreads 10
+
+    return rejiggered.fits.gz files 
+
+BEGIN 
+
+allbin.xcd = all bin chunk files from HAWC database
+bin2up.xcd = bins 2-10 chunk files from HAWC database
+bin6up.xcd = bins 6-10 chunk files from HAWC database
+
+DI_param.xml = direct integration parameter file from HAWC database
+noDI_param.xml = param file w/ no direct integration from HAWC database
+
+bin0-1_cut.txt = cut file for bins 0-1 from HAWC database
+bin2-5_cut.txt = cut file for bins 2-5 from HAWC database
+bin6-7_cut.txt = cut file for bins 6, 7C0 from HAWC database
+bin7-10_cut.txt = cut file for bins 7C1, 8-10 from HAWC database
+
+zenith_align.xml = zenith alignment file from HAWC database
+
+aerie_path = path to aerie source file within scratch space
+working directory = path to working dir within scratch space
+
+
+allbin.fits.gz files = make_sub_scripts(allbin.xcd,DI_param.xml,bin0-1_cut.txt,aerie_path,working_dir/chunked)
+bin2up.fits.gz files = make_sub_scripts(bin2up.xcd,DI_param.xml,bin2-5_cut.txt,aerie_path,working_dir/chunked)
+bin6-7.fits.gz files = make_sub_scripts(bin6up.xcd,DI_param.xml,bin6-7_cut.txt,aerie_path,working_dir/chunked)
+bin7-10.fits.gz files = make_sub_scripts(bin6up.xcd,noDI_param.xml,bin7-10_cut.txt,aerie_path,working_dir/chunked)
+
+binned.fits.gz files = combine-files(allbin.fits.gz & bin2up.fits.gz & bin6up.fits.gz files, bins 0-7C0, working_dir/chunked, working_dir/combined)
+    
+hists.root files = make-histograms(bin6up.xcd,noDI_param.xml,bin7-10_cut.txt,aerie_path,working_dir/histograms)
+combined_hists.root files = combine_histograms(hists.root,bins 7C1-10)
+binned_B7C1-B10-randomized.fits.gz files = make-randomized-bkg(combined_hists.root,zenith_align.xml,working_dir/histogrmas,working_dir/combined,working_dir/rand,aerie-path,bins 7C1-10)
+
+replace binned.fits.gz files for bins B7C1-B10 with binned_B7C1-B10-randomized.fits.gz    
+
+rejiggered-binned.fits.gz files = rejigger(binned.fits.gz & binned_B7C1-B10-randomized.fits.gz,working_dir/rejiggered)
