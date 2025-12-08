@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Phoebe Zyla">
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>About - Map-Making with HAWC</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Map-Making with HAWC</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://github.com/phoebezyla/890-602_proj/edit/master/docs/about.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#about" class="nav-link">About</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#script-descriptions" class="nav-link">SCRIPT DESCRIPTIONS</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#make-sub-scriptspy" class="nav-link">make-sub-scripts.py</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#combine-raw-filespy" class="nav-link">combine-raw-files.py</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#make-histogramspy" class="nav-link">make-histograms.py</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#make-randomized-bkgpy" class="nav-link">make-randomized-bkg.py</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#making-maps" class="nav-link">MAKING MAPS</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="about">About</h1>
+<p>This is a project intended to speed up / ease the process to creating maps with HAWC data. In order to follow this process, you need to have an account on the UMD cluster and AERIE installed -- check the <code>software-help</code> slack channel if needed. There is some documentation on the HAWC wiki as well. </p>
+<p>Cuts files are on github and can be found on UMD cluster. <code>.fits.gz</code> data files are only on cluster -- too big to host elsewhere. </p>
+<p>These are the scripts and fhit cut files to make fhit maps (including background estimation). The scripts assume that the chunks are already made, and the <code>$CONFIG_HAWC</code> parameter is correctly set. 
+Much of this repository has been modified from Kelly Malone's ground parameter map-making repository (https://gitlab.com/hawc-observatory/analysis-scripts/map-making/-/tree/master/counts-maps/GP-scripts?ref_type=heads).</p>
+<h1 id="script-descriptions">SCRIPT DESCRIPTIONS</h1>
+<h2 id="make-sub-scriptspy"><code>make-sub-scripts.py</code></h2>
+<p>Creats job submission scripts for slurm to make the raw maps, broken into a reasonable number of jobs to reduce cluster memory usage. Need to specify aerie location, path to input .txt files, chunks to iterate over, parameter/zenith alignment file, cut file, and output directory. 
+Note: There is one input text file for every chunk. Each text file has, on every line, the path to one .xcd file for that chunk. Each chunk has a different number of .xcd files.</p>
+<h2 id="combine-raw-filespy"><code>combine-raw-files.py</code></h2>
+<p>Creats job submission scripts to make one file for each bin, using <code>aerie-apps-combine-maps</code>. Specify the directory to the raw maps, a list of the energy bins to iterate over, aerie location, and output directory.</p>
+<h2 id="make-histogramspy"><code>make-histograms.py</code></h2>
+<p>Creates job submission scripts to begin the process of randomizing background for low-statistic bins. For the fhit energy estimator, this is for bins B7C1, B8C0, B8C1, B9C0, B9C1, B10C0, and B10C1. Specify aerie location, path to input .txt files, chunks to iterate over, cut file, and output directory.
+Note: Chunks to iterate over needs to be the same as those used in <code>make-sub-scripts.py</code>. Otherwise the background randomization will fail because the histogram and map will have different numbers of evernts. </p>
+<h2 id="make-randomized-bkgpy"><code>make-randomized-bkg.py</code></h2>
+<p>Creates job submission scripts to randomize the background for the bins with low statistics. Specify aerie location, location of histograms from <code>make-histograms.py</code>, location of combined files from <code>combine-raw-files.py</code>, list of bins to iterate over, parameter/zenith alignment file, and output directory.</p>
+<h1 id="making-maps">MAKING MAPS</h1>
+<p>For the fHit energy estimator, there are four groups of energy bins, each of which requires a unique combonation of input .txt files, cut file, parameter/zenith alignment file, and background estimation scheme. Listed below is each group of bins, and their required inputs. </p>
+<ul>
+<li>B0C0 B0C1 B1C0 B1C1</li>
+<li><code>.../pass5_allbin/chunk%d.txt</code> The .xcd files must come from an <code>allbin</code> directory</li>
+<li><code>.../fNhit_100pct_pgamma_mlp_cut_0-1.txt</code></li>
+<li><code>'-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 1.2 --dtMax_hr 2.0 --nSide 1024 --roi --useJ2000 --rndSmear'</code> This is the current (as of 11/2025) zenith alignment file</li>
+<li>
+<p>Background Est. = Direct Integration (DI)</p>
+</li>
+<li>
+<p>B2C0 B2C1 B3C0 B3C1 B4C0 B4C1 B5C0 B5C1</p>
+</li>
+<li><code>../pass5_bin2up/chunk%d.txt</code> The .xcd files must come from a <code>bin2up</code> directory</li>
+<li><code>.../fNhit_100pct_pgamma_mlp_cut_2-5.txt</code></li>
+<li><code>'-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 1.2 --dtMax_hr 2.0 --nSide 1024 --roi --useJ2000 --rndSmear'</code> This is the current (as of 11/2025) zenith alignment file</li>
+<li>
+<p>Background Est. = Direct Integration (DI)</p>
+</li>
+<li>
+<p>B6C0 B6C1 B7C0</p>
+</li>
+<li><code>.../pass5_bin6up/chunk%06d.txt</code> The .xcd files must come from a <code>bin6up</code> directory.</li>
+<li><code>.../fNhit_100pct_pgamma_mlp_cut_6-7.txt</code></li>
+<li><code>'-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 1.2 --dtMax_hr 2.0 --nSide 1024 --roi --useJ2000 --rndSmear'</code> This is the current (as of 11/2025) zenith alignment file</li>
+<li>
+<p>Background Est. = Direct Integration (DI)</p>
+</li>
+<li>
+<p>B7C1 B8C0 B8C1 B9C0 B9C1 B10C0 B10C1</p>
+</li>
+<li><code>.../pass5_bin6up/chunk%06d.txt</code> The .xcd files must come from a <code>bin6up</code> directory.</li>
+<li><code>.../fNhit_100pct_pgamma_mlp_cut_7up_noDI.txt</code></li>
+<li><code>'-z $CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml --dtMin 0 --dtMax_hr 2.0 --nSide 1024 --useJ2000 --rndSmear'</code> This is the current (as of 11/2025) zenith alignment file for no DI. Not that <code>dtMin</code> here is 0 -- only those bins with DI have <code>dtMin = 1.2</code>. Also, the <code>--roi</code> flag is not used for this bin group.</li>
+<li>Background Est. = Randomized Background</li>
+</ul>
+<p>In the cuts folder in this repository, all individual cut files and the master cut file are stored. </p>
+<ol>
+<li>Modify and run <code>make-sub-scripts.py</code>. </li>
+<li>The script must be run four times, once with the inputs changed for each of the bin groups.</li>
+<li>Be sure to change the name for the output job submission script</li>
+<li>
+<p>The output will be four job submission .sh files per chunk, one for each bin group.</p>
+</li>
+<li>
+<p>Submit job scripts from step 1.</p>
+</li>
+<li>
+<p>Output is one .fits.gz file per chunk per bin</p>
+</li>
+<li>
+<p>Modify and run <code>combine-raw-files.py</code></p>
+</li>
+<li>The script only needs to be run once.</li>
+<li>
+<p>The output will be one job submission script per bin</p>
+</li>
+<li>
+<p>Submit job scripts from step 3.</p>
+</li>
+<li>
+<p>Output is one .fits.gz file per bin</p>
+</li>
+<li>
+<p>Modify and run <code>make-histograms.py</code></p>
+</li>
+<li>The script needs to be run once, with the input directory being the directory for the randomize background bin group. Histograms only need to be made for the group w/ energy estimator = randomize background. </li>
+<li>
+<p>The output will be one job submission script per chunk</p>
+</li>
+<li>
+<p>Submit job scripts from step 5.</p>
+</li>
+<li>
+<p>Output is one .root file per chunk per bin</p>
+</li>
+<li>
+<p>Combine .root files from (9) with <code>hadd</code></p>
+</li>
+<li>For bin X, do <code>hadd binX.root distsXroot</code></li>
+<li>
+<p>Output is one .root file per bin</p>
+</li>
+<li>
+<p>Modify and run <code>make-randomized-bkg.py</code></p>
+<ul>
+<li>Output is one job submission script per bin</li>
+</ul>
+</li>
+<li>
+<p>Submit job scripts from step 10.</p>
+<ul>
+<li>Output is one -randomized.fits.gz file per bin</li>
+</ul>
+</li>
+<li>
+<p>Replace combined files for randomized background bins with the files from (11).</p>
+</li>
+<li>
+<p>Rejigger all files by an additional 0.5 degrees</p>
+<ul>
+<li><code>aerie-apps-recalculate-bkg -i inputfile.fits.gz -o outputfile.fits.gz --smooth 0.5 --nthreads 10</code></li>
+<li>Input files are .fits.gz files from step 5 for all DI bin groups and from step 12 for all randBkg bin groups</li>
+<li>Output is rejiggered .fits.gz files</li>
+</ul>
+</li>
+</ol>
+<p>Last Edited: Nov 2025 P. Zyla</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
