@@ -1,3 +1,9 @@
+# About 
+
+This is a project intended to speed up / ease the process to creating maps with HAWC data. In order to follow this process, you need to have an account on the UMD cluster and AERIE installed -- check the `software-help` slack channel if needed. There is some documentation on the HAWC wiki as well. 
+
+Cuts files are on github and can be found on UMD cluster. `.fits.gz` data files are only on cluster -- too big to host elsewhere. 
+
 These are the scripts and fhit cut files to make fhit maps (including background estimation). The scripts assume that the chunks are already made, and the `$CONFIG_HAWC` parameter is correctly set. 
 Much of this repository has been modified from Kelly Malone's ground parameter map-making repository (https://gitlab.com/hawc-observatory/analysis-scripts/map-making/-/tree/master/counts-maps/GP-scripts?ref_type=heads).
 

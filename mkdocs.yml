@@ -1,0 +1,8 @@
+site_name: Map-Making with HAWC
+site_author: Phoebe Zyla
+
+nav:
+  - Home: 'index.md'
+  - About: 'about.md'
+
+repo_url: https://github.com/phoebezyla/890-602_proj
