@@ -13,7 +13,7 @@ from math import ceil
 aerie = "source /data/disk01/home/zylaphoe/hawc_software/init_aerie.sh"
   # can source my aerie version, or your own! see aerie documentation on HAWC wiki to install
 histLoc = "/lustre/hawcz01/scratch/userspace/zylaphoe/maps/hists"
-  # where input histograms are located. same dir as output from make-hists.py
+  # where input histograms are located. same dir as output from make-histograms.py
 combinedFiles="/lustre/hawcz01/scratch/userspace/zylaphoe/maps/combined"
   # where input combined .fits.gz files are located. same dir as output from combine-raw-files.py
 outputDir = "/lustre/hawcz01/scratch/userspace/zylaphoe/maps/randBkg"
