@@ -11,13 +11,18 @@ import sys
 from math import ceil
 
 aerie = "source /data/disk01/home/zylaphoe/hawc_software/init_aerie.sh"
-
+  # can source my aerie version, or your own! see aerie documentation on HAWC wiki to install
 histLoc = "/lustre/hawcz01/scratch/userspace/zylaphoe/maps/hists"
+  # where input histograms are located. same dir as output from make-hists.py
 combinedFiles="/lustre/hawcz01/scratch/userspace/zylaphoe/maps/combined"
+  # where input combined .fits.gz files are located. same dir as output from combine-raw-files.py
 outputDir = "/lustre/hawcz01/scratch/userspace/zylaphoe/maps/randBkg"
+  # where you want output randomized bkg .fits.gz files to go
 
 zenithAlignmentFile = "$CONFIG_HAWC/reconstruction/alignment/align_pass5_v1.0/zenith-pass5-2021-08-13.xml"
+  # parameter files should be in personal $CONFIG_HAWC if aerie installed and set up correctly
 bins = ["B7C1","B8C0","B8C1","B9C0","B9C1","B10C0","B10C1"]
+  # bins that require the randomize background estimation scheme. Only change if working with different binning scheme
 
 for x in bins:  
   outfile = open("randomize-%s.sh"%(x), "w")
